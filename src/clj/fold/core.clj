@@ -4,6 +4,13 @@
 
 (defonce PORT 4000)
 
+(defonce server (atom nil))
+
+(defn stop-server []
+  (when-not (nil? @server)
+    (@server :timeout 100)
+    (reset! server nil)))
+
 (def app
   (ring/ring-handler
     (ring/router
@@ -15,4 +22,8 @@
 
 (defn -main []
   (printf "server running on port %s\n", PORT)
-  (run-server app {:port PORT}))
+  (reset! server (run-server app {:port PORT})))
+
+(comment
+  @server
+  (stop-server))
